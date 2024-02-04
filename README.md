@@ -68,6 +68,43 @@ Also, you can use [Nav2](https://navigation.ros.org/) with the robot in the worl
 ```bash
 ros2 launch tiago_simulator navigation.launch.py
 ``` 
+# Running moveit and gazebo:
+
+Before using moveit and gazebo with tiago robot, there are some small fixes to be done.
+
+First, on the tiago urdf, we have to delete line 33 to 35:
+```bash
+sudo sed -i '33d;34d;35d;36d' /opt/ros/humble/share/tiago_description/robots/tiago.urdf.xacro
+```
+
+Then we need to edit the gripper controller config yaml:
+```bash
+sudo sed -i 's/\${EE_SIDE_PREFIX}/gripper/g' /opt/ros/humble/share/pal_gripper_controller_configuration/config/gripper_controller.yaml
+```
+Finally (optional), if we want to do grasping tasks we should incorpore a gazebo plugin for it in the gripper xacro:
+```bash
+sudo sed -i '/<\/xacro:macro>/,/<\/robot>/{
+    /<\/xacro:macro>/a\
+<gazebo>\
+    <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">\
+        <arm>\
+            <arm_name>pal_gripper_fix</arm_name> \
+            <palm_link>wrist_ft_link</palm_link> \
+            <gripper_link>gripper_left_finger_link</gripper_link>\
+            <gripper_link>gripper_right_finger_link</gripper_link>\
+        </arm>\
+        <forces_angle_tolerance>100</forces_angle_tolerance>\
+        <update_rate>4</update_rate>\
+        <grip_count_threshold>4</grip_count_threshold>\
+        <max_grip_count>8</max_grip_count>\
+        <release_tolerance>0.005</release_tolerance>\
+        <disable_collisions_on_attach>false</disable_collisions_on_attach>\
+        <contact_topic>__default_topic__</contact_topic>\
+    </plugin>\
+</gazebo>
+}' /opt/ros/humble/share/pal_gripper_description/urdf/gripper.gazebo.xacro
+
+```
 
 ## About
 
