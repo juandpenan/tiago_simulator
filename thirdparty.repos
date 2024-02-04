@@ -19,3 +19,11 @@ repositories:
     type: git
     url: https://github.com/aws-robotics/aws-robomaker-small-warehouse-world.git
     version: ros2
+  ThirdParty/gazebo-pkgs:
+    type: git
+    url: https://github.com/zitongbai/gazebo-pkgs
+    version: humble
+  ThirdParty/robocup_at_home_gazebo:
+    type: git
+    url: https://github.com/juandpenan/robocup_at_home_gazebo.git
+    version: ros2

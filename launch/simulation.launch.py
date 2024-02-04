@@ -135,6 +135,24 @@ def generate_launch_description():
                         'aws_robomaker_bookstore_world'),
                     'launch'), '/view_bookstore.launch.py']),
             )
+    elif 'robocup' in world_name:
+        gazebo = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([os.path.join(
+                get_package_share_directory('robocup_at_home_gazebo'),
+                'launch'), '/storing_groceries.py']),
+            launch_arguments={
+                'gui': 'true'
+            }.items()
+        )
+        if 'breakfast' in world_name:
+            gazebo = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory('robocup_at_home_gazebo'),
+                    'launch'), 'serve_breakfast.py']),
+                launch_arguments={
+                    'gui': 'true'
+                    }.items()
+            )
 
     # robot_spawn = include_launch_py_description(
     #     'tiago_simulator', ['launch', 'dependencies',
@@ -149,8 +167,8 @@ def generate_launch_description():
 
     move_group = include_launch_py_description(
         'tiago_moveit_config', ['launch', 'move_group.launch.py'],
-        condition=IfCondition(LaunchConfiguration('moveit')))
-
+        condition=IfCondition(LaunchConfiguration('moveit')),
+    )
     tuck_arm = Node(package='tiago_gazebo',
                     executable='tuck_arm.py',
                     emulate_tty=True,
