@@ -1,9 +1,10 @@
-# Copyright (c) 2023 José Miguel Guerrero Hernández
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Copyright (c) 2024 José Miguel Guerrero Hernández
+#
+# Licensed under the Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) License;
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://creativecommons.org/licenses/by-sa/4.0/
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -58,6 +59,10 @@ def generate_launch_description():
     robots_dir = get_package_share_directory('tiago_simulator')
 
     config = os.path.join(robots_dir, 'config', 'params.yaml')
+
+    sim_time_arg = DeclareLaunchArgument(
+      'use_sim_time', default_value='True',
+      description='Use simulation (Gazebo) clock if true')
 
     with open(config, "r") as stream:
         try:
@@ -225,6 +230,7 @@ def generate_launch_description():
     # Using this prevents shared library from being found
     # ld.add_action(SetEnvironmentVariable('GAZEBO_RESOURCE_PATH',
     #                                       tiago_resource_path))
+    ld.add_action(sim_time_arg)
     ld.add_action(world_name_arg)
     ld.add_action(model_name)
     ld.add_action(gazebo)
